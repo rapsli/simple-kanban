@@ -46,7 +46,6 @@
 
 				create_board(app_data);
 				createPeopleList();
-				console.log(app_data);
 			}
 		});
 		//return rawData;
@@ -65,8 +64,6 @@
 		if (data == '') {
 			data = {};
 		}
-		console.log('save')
-		console.log(data);
 		$.ajax({
 			type: 'POST',
 			url: 'server.php',
@@ -202,7 +199,6 @@
 
 		$('#navigation').on('change', '.people-list li', function(){
 			var responsible = $(this).find('input').attr('name');
-			console.log(app_data.people[responsible]);
 			for (var k in app_data.people[responsible]) {
 				if ($('#board li[data-id="'+app_data.people[responsible][k]+'"]').hasClass('highlight')) {
 					$('#board li[data-id="'+app_data.people[responsible][k]+'"]').removeClass('highlight');
@@ -210,7 +206,6 @@
 				else {
 					$('#board li[data-id="'+app_data.people[responsible][k]+'"]').addClass('highlight');
 				}
-				console.log('#board[data-id="'+app_data.people[responsible][k]+'"]');
 			}
 		});
 
@@ -229,7 +224,7 @@
 		$('#board').on('click','.delete', function(){
 			var id = $(this).parent().parent().attr('data-id');
 			$(this).parent().parent().parent().parent().remove();
-			console.log(id);
+			
 			delete app_data.rawData[id];
 			saveData(app_data.rawData);
 			setTimeout(function(){IN_EDIT_MODE = false;}, 200); // need to release a bit later, else we are right back into edit mode again

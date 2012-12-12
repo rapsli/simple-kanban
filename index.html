@@ -14,7 +14,6 @@
 		'R,Request Evaluation',
 		'Rm,Requirements',
 		'C,Concept',
-		'E,Elaboration',
 		'D,Development',
 		'Dy,Deployment',
 		'L,Live'
@@ -35,20 +34,25 @@
 			data: {action:'load'},
 			dataType: 'json',
 			success: function(data) {
+				if (data === null) {
+					data = {};
+				}
 				app_data.board = init_board(data);
 				app_data.states = state_data.states;
 				app_data.states_order = state_data.states_order;
+				
+
 				app_data.rawData = data;
 
 				create_board(app_data);
 				createPeopleList();
+				console.log(app_data);
 			}
 		});
 		//return rawData;
 	}
 
 	var createPeopleList = function() {
-		console.log(app_data.people);
 		var peopleList = '<form ><ul class="people-list">';
 		for (var i in app_data.people) {
 			peopleList += '<li><input type="checkbox" name="'+i+'">'+i+'</li>';
@@ -58,6 +62,11 @@
 	}
 
 	var saveData = function(data) {
+		if (data == '') {
+			data = {};
+		}
+		console.log('save')
+		console.log(data);
 		$.ajax({
 			type: 'POST',
 			url: 'server.php',
@@ -96,7 +105,7 @@
 		var story_element = $("<li data-state='"+story.state+"' data-id='"+story.id+"'><div class='box' ><div class='editable' data-id='"+story.id+"'>" + story.title + ", " + story.responsible + "</div></div></li>");
 		
 		if (app_data.people[story.responsible] === undefined) {
-			app_data.people[story.responsible] = new Array(story.id);
+			app_data.people[story.responsible] = [story.id];
 		}
 		else {
 			app_data.people[story.responsible].push(story.id);
@@ -171,6 +180,9 @@
 		$('#new').click(function(){
 			var id = new Date().getTime();
 			story = createNewStory(id, "New project")
+			if (app_data.rawData === undefined) {
+				app_data.rawData = {};
+			}
 			app_data.rawData[id] = story;
 			saveData(app_data.rawData);
 			var storyHtml = create_story_li_item(story);

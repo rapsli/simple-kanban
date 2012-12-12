@@ -1,5 +1,5 @@
 <?php
-define(DATA_FILE, 'data.txt');
+define('DATA_FILE', 'data.txt');
 
 function save($data) {
 	$encoded = json_encode($data);
@@ -16,5 +16,5 @@ function load() {
 
 if (function_exists($_POST['action'])) {
 	$actionVar = $_POST['action'];
-	$actionVar($_POST['data']);
+	@$actionVar($_POST['data']);
 }

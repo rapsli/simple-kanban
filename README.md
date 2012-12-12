@@ -8,3 +8,5 @@ Editing projects is done inline. One click and there you go.
 It's also possible to easily iFrame this into other platforms (e.g. Sharepoint).
 
 Works in IE8+, Chrome and Firefox.
+
+This has been inspired by http://www.simple-kanban.com/

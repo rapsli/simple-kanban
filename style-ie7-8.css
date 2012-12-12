@@ -1,0 +1,17 @@
+#board {
+	display: block; 
+}
+
+#board .col {
+	display: block;
+	float: left;
+}
+
+.state_box {
+	width:12%;
+	margin-right: 5px;
+}
+
+.box {
+	height: 32px;
+}

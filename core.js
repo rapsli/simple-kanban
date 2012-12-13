@@ -122,7 +122,7 @@
 			$('#board').append(col);
 		}
 		
-		$('ul.state').dragsort({dragSelector:'li',dragBetween: true, placeHolderTemplate: "<li class='placeholder'><div>&nbsp;</div></li>",dragEnd:droppedElement});
+		$('ul.state').dragsort({dragSelector:'li',dragBetween: true, placeHolderTemplate: "<li class='placeholder'><div>&nbsp</div></li>",dragEnd:droppedElement});
 	};
 
 	var createNewStory = function(id, text, state, color) {
@@ -174,15 +174,24 @@
 			saveData(app_data.rawData);
 			var storyHtml = create_story_li_item(story);
 			$('#'+story.state).append(storyHtml);
+			$(storyHtml).find('.editable').trigger('click');
 			return false;
 		});
 
 		$('#board').on('click','.editable', function(){
 			if (!IN_EDIT_MODE) {
 				var value = $(this).html();
-				var form = '<form><input type="text" class="editBox" value="'+value+'" data-old-value="'+value+'"/><br/><a class="save" href="#">save</a> <a class="cancel" href="#">cancel</a> <a href="#" class="delete">delete</a> <a href="#" class="color">color</a></form>';
+				var storyId = $(this).parent().parent().attr('data-id');
+				var oldColor = app_data.rawData[storyId].color;
+				var form = '<form><input type="text" class="editBox" value="'+value+'" data-old-value="'+value+'" data-old-color="'+oldColor+'"/><br/><a class="save" href="#">save</a> <a class="cancel" href="#">cancel</a> <a href="#" class="delete">delete</a> <a href="#" class="color">color</a></form>';
 				$(this).html(form);
+				$(this).find('input').focus();
 				IN_EDIT_MODE = true;
+				setTimeout(function(){
+					$('html:not(.editable)').bind('click', function(){
+						$('.cancel').trigger('click');
+					});
+				}, 100);
 			}
 		});
 
@@ -203,21 +212,36 @@
 				$('.cancel').trigger('click');
 			}
 			else if (e.keyCode === 78) {
-				$('#new').trigger('click');
+				if (!IN_EDIT_MODE) {
+					$('#new').trigger('click');
+				}
 			}
 		});
 
 		$('#board').on('click','.cancel', function(){
+			var storyId = $(this).parent().parent().attr('data-id');
+
+			var remove_colors = "";
+			for (var i=0;i<possible_colors;i++) {
+				remove_colors += "color_"+i+" ";
+			}
+			var oldColor = $(this).parent().find('input').attr('data-old-color');
+			app_data.rawData[storyId].color = oldColor;
+			$(this).parent().parent().parent().removeClass(remove_colors);
+			$(this).parent().parent().parent().addClass('color_'+oldColor);
+
 			var oldContent = $(this).parent().find('input').attr('data-old-value');
 			$(this).parent().parent().html(oldContent);
+
+			$('html').unbind('click');
 			setTimeout(function(){IN_EDIT_MODE = false;}, 200); // need to release a bit later, else we are right back into edit mode again
-      return false;
+      		return false;
 		});
 
 		$('#board').on('click','.delete', function(){
 			var id = $(this).parent().parent().attr('data-id');
 			$(this).parent().parent().parent().parent().remove();
-			
+			$('html').unbind('click');
 			delete app_data.rawData[id];
 			saveData(app_data.rawData);
 			setTimeout(function(){IN_EDIT_MODE = false;}, 200); // need to release a bit later, else we are right back into edit mode again
@@ -248,7 +272,7 @@
 
 			app_data.rawData[storyId] = story;
 			saveData(app_data.rawData);
-
+			$('html').unbind('click');
 			$(this).parent().html( story.title + ", "+story.responsible);
 			setTimeout(function(){IN_EDIT_MODE = false;}, 200); // need to release a bit later, else we are right back into edit mode again
 			return false;

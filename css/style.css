@@ -151,7 +151,7 @@ navigation.top li {
 	margin-top: 1px;
 	line-height: 14px;
 	vertical-align: text-top;
-	background-image: url("img/glyphicons-halflings-white.png");
+	background-image: url("../img/glyphicons-halflings-white.png");
 	background-position: 14px 14px;
 	background-repeat: no-repeat;
 }
@@ -160,4 +160,12 @@ navigation.top li {
 }
 .icon-question-sign {
 	background-position: -96px -96px;
+}
+
+.hide {
+	display: none;
+}
+
+.modal li {
+	line-height: 1.8em;
 }

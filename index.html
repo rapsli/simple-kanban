@@ -19,11 +19,14 @@
 		'L,Live'
 	];
 
+	var possible_colors = 4;
+
 
 	var app_data = {
 		people:{}
 	};
 	
+	// flips back end forth to disable other event listener when already editing
 	var IN_EDIT_MODE = false;
 
 	var loadData = function() {
@@ -99,7 +102,7 @@
 	}
 
 	var create_story_li_item = function(story) {
-		var story_element = $("<li data-state='"+story.state+"' data-id='"+story.id+"'><div class='box' ><div class='editable' data-id='"+story.id+"'>" + story.title + ", " + story.responsible + "</div></div></li>");
+		var story_element = $("<li data-state='"+story.state+"' data-id='"+story.id+"'><div class='box color_"+story.color+"' ><div class='editable' data-id='"+story.id+"'>" + story.title + ", " + story.responsible + "</div></div></li>");
 		
 		if (app_data.people[story.responsible] === undefined) {
 			app_data.people[story.responsible] = [story.id];
@@ -139,9 +142,12 @@
 		$('ul.state').dragsort({dragSelector:'li',dragBetween: true, placeHolderTemplate: "<li class='placeholder'><div>&nbsp;</div></li>",dragEnd:droppedElement});
 	}
 
-	var createNewStory = function(id, text, state) {
+	var createNewStory = function(id, text, state, color) {
 		if (state === undefined) {
 			state = app_data.states_order[0];
+		}
+		if (color === undefined) {
+			color = 0
 		}
 
 		var text = text.split(',');
@@ -152,7 +158,8 @@
 			title:text[0],
 			id:id,
 			responsible:text[1].replace(/^\s+/,''),
-			state:state
+			state:state,
+			color:color
 		};
 		return story;
 	}
@@ -191,7 +198,7 @@
 			if (!IN_EDIT_MODE) {
 				var value = $(this).html();
 				var id = $(this).attr('data-id');
-				var form = '<form><input type="text" class="editBox" value="'+value+'" data-old-value="'+value+'"/><br/><a class="save" href="#">save</a> <a class="cancel" href="#">cancel</a> <a href="#" class="delete">delete</a></form>';
+				var form = '<form><input type="text" class="editBox" value="'+value+'" data-old-value="'+value+'"/><br/><a class="save" href="#">save</a> <a class="cancel" href="#">cancel</a> <a href="#" class="delete">delete</a> <a href="#" class="color">color</a></form>';
 				$(this).html(form);
 				IN_EDIT_MODE = true;
 			}
@@ -213,6 +220,9 @@
 			if (e.keyCode == 27) { 
 				$('.cancel').trigger('click');
 			}
+			else if (e.keyCode == 78) {
+				$('#new').trigger('click');
+			}
 		});
 
 		$('#board').on('click','.cancel', function(){
@@ -230,11 +240,26 @@
 			setTimeout(function(){IN_EDIT_MODE = false;}, 200); // need to release a bit later, else we are right back into edit mode again
 		});
 
+		$('#board').on('click', '.color', function() {
+			var storyId = $(this).parent().parent().attr('data-id');
+			if (app_data.rawData[storyId].color === undefined) {
+				app_data.rawData[storyId].color = 0;				
+			}
+			else {
+				$(this).parent().parent().parent().removeClass('color_'+app_data.rawData[storyId].color);
+				app_data.rawData[storyId].color++;
+				if (app_data.rawData[storyId].color >= possible_colors) {
+					app_data.rawData[storyId].color = 0;
+				}
+			}
+			$(this).parent().parent().parent().addClass('color_'+app_data.rawData[storyId].color);
+		});
+
 		$('#board').on('submit', 'form', function(e){
 			var title = $(this).find('input').val();
 			var storyId = $(this).parent().attr('data-id');
 			var state = $(this).parent().parent().parent().attr('data-state');
-			var story = createNewStory(storyId, title, state);
+			var story = createNewStory(storyId, title, state, app_data.rawData[storyId].color);
 
 			app_data.rawData[storyId] = story;
 			saveData(app_data.rawData);
@@ -263,5 +288,6 @@
 	<div id="navigation" class="navigation">
 		<h5>People with projects</h5>
 	</div>
+
 </body>
 </html>

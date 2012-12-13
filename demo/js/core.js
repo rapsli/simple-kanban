@@ -9,39 +9,20 @@
 	var IN_EDIT_MODE = false;
 
 	var loadData = function() {
-		var data = {"1355342903837":{"title":"New Project","id":"1355342903837","responsible":"Hans","state":"C","color":"2"},"1355343466454":{"title":"Website www.example.com","id":"1355343466454","responsible":"Raphael","state":"R","color":"3"},"1355343493036":{"title":"Wedding for my brother","id":"1355343493036","responsible":"Peter","state":"D","color":"2"},"1355343507267":{"title":"Version 1.0 for simple-kanban","id":"1355343507267","responsible":"Raphael","state":"P","color":"1"},"1355394524007":{"title":"Test Project","id":"1355394524007","responsible":"Raphael","state":"Rm","color":"1"},"1355394872356":{"title":"Test","id":"1355394872356","responsible":"project","state":"P","color":"3"},"1355395007864":{"title":"test 1","id":"1355395007864","responsible":"Raphael","state":"P","color":"1"}};
-
 		var state_data = init_states(possibleStates);
+		var data = {"1355342903837":{"title":"New Project","id":"1355342903837","responsible":"Hans","state":"Rm","color":"2"},"1355343466454":{"title":"Website www.example.com","id":"1355343466454","responsible":"Raphael","state":"D","color":"2"},"1355343493036":{"title":"Wedding for my brother","id":"1355343493036","responsible":"Peter","state":"C","color":"3"},"1355343507267":{"title":"Version 1.0 for simple-kanban","id":"1355343507267","responsible":"Raphael","state":"R","color":"1"},"1355394524007":{"title":"Test Project","id":"1355394524007","responsible":"Raphael","state":"C","color":"1"},"1355394872356":{"title":"Test","id":"1355394872356","responsible":"project","state":"Dy","color":"3"},"1355402827963":{"title":"Projekte mit n","id":"1355402827963","responsible":"Peter","state":"D","color":"1"},"1355404396071":{"title":"Test project","id":"1355404396071","responsible":"Peter","state":"P","color":"0"},"1355404426266":{"title":"Test Project","id":"1355404426266","responsible":"Raphael","state":"R","color":"2"}};
+		if (data === null) {
+			data = {};
+		}
 		app_data.board = init_board(data);
-				app_data.states = state_data.states;
-				app_data.states_order = state_data.states_order;
-				
+		app_data.states = state_data.states;
+		app_data.states_order = state_data.states_order;
+		
 
-				app_data.rawData = data;
+		app_data.rawData = data;
 
-				create_board(app_data);
-				createPeopleList();
-		/*$.ajax({
-			type: 'POST',
-			url: 'server.php',
-			data: {action:'load'},
-			dataType: 'json',
-			success: function(data) {
-				if (data === null) {
-					data = {};
-				}
-				app_data.board = init_board(data);
-				app_data.states = state_data.states;
-				app_data.states_order = state_data.states_order;
-				
-
-				app_data.rawData = data;
-
-				create_board(app_data);
-				createPeopleList();
-			}
-		});*/
-		//return rawData;
+		create_board(app_data);
+		createPeopleList();
 	};
 
 	var createPeopleList = function() {
@@ -133,7 +114,7 @@
 			$('#board').append(col);
 		}
 		
-		$('ul.state').dragsort({dragSelector:'li',dragBetween: true, placeHolderTemplate: "<li class='placeholder'><div>&nbsp;</div></li>",dragEnd:droppedElement});
+		$('ul.state').dragsort({dragSelector:'li',dragBetween: true, placeHolderTemplate: "<li class='placeholder'><div>&nbsp</div></li>",dragEnd:droppedElement});
 	};
 
 	var createNewStory = function(id, text, state, color) {
@@ -185,15 +166,24 @@
 			saveData(app_data.rawData);
 			var storyHtml = create_story_li_item(story);
 			$('#'+story.state).append(storyHtml);
+			$(storyHtml).find('.editable').trigger('click');
 			return false;
 		});
 
 		$('#board').on('click','.editable', function(){
 			if (!IN_EDIT_MODE) {
 				var value = $(this).html();
-				var form = '<form><input type="text" class="editBox" value="'+value+'" data-old-value="'+value+'"/><br/><a class="save" href="#">save</a> <a class="cancel" href="#">cancel</a> <a href="#" class="delete">delete</a> <a href="#" class="color">color</a></form>';
+				var storyId = $(this).parent().parent().attr('data-id');
+				var oldColor = app_data.rawData[storyId].color;
+				var form = '<form><input type="text" class="editBox" value="'+value+'" data-old-value="'+value+'" data-old-color="'+oldColor+'"/><br/><a class="save" href="#">save</a> <a class="cancel" href="#">cancel</a> <a href="#" class="delete">delete</a> <a href="#" class="color">color</a></form>';
 				$(this).html(form);
+				$(this).find('input').focus();
 				IN_EDIT_MODE = true;
+				setTimeout(function(){
+					$('html:not(.editable)').bind('click', function(){
+						$('.cancel').trigger('click');
+					});
+				}, 100);
 			}
 		});
 
@@ -214,21 +204,36 @@
 				$('.cancel').trigger('click');
 			}
 			else if (e.keyCode === 78) {
-				$('#new').trigger('click');
+				if (!IN_EDIT_MODE) {
+					$('#new').trigger('click');
+				}
 			}
 		});
 
 		$('#board').on('click','.cancel', function(){
+			var storyId = $(this).parent().parent().attr('data-id');
+
+			var remove_colors = "";
+			for (var i=0;i<possible_colors;i++) {
+				remove_colors += "color_"+i+" ";
+			}
+			var oldColor = $(this).parent().find('input').attr('data-old-color');
+			app_data.rawData[storyId].color = oldColor;
+			$(this).parent().parent().parent().removeClass(remove_colors);
+			$(this).parent().parent().parent().addClass('color_'+oldColor);
+
 			var oldContent = $(this).parent().find('input').attr('data-old-value');
 			$(this).parent().parent().html(oldContent);
+
+			$('html').unbind('click');
 			setTimeout(function(){IN_EDIT_MODE = false;}, 200); // need to release a bit later, else we are right back into edit mode again
-      return false;
+      		return false;
 		});
 
 		$('#board').on('click','.delete', function(){
 			var id = $(this).parent().parent().attr('data-id');
 			$(this).parent().parent().parent().parent().remove();
-			
+			$('html').unbind('click');
 			delete app_data.rawData[id];
 			saveData(app_data.rawData);
 			setTimeout(function(){IN_EDIT_MODE = false;}, 200); // need to release a bit later, else we are right back into edit mode again
@@ -259,7 +264,7 @@
 
 			app_data.rawData[storyId] = story;
 			saveData(app_data.rawData);
-
+			$('html').unbind('click');
 			$(this).parent().html( story.title + ", "+story.responsible);
 			setTimeout(function(){IN_EDIT_MODE = false;}, 200); // need to release a bit later, else we are right back into edit mode again
 			return false;

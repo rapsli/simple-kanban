@@ -141,6 +141,7 @@ navigation.top {
 navigation.top a, navigation.top a:visited, navigation.top a:active {
 	color: #fff;
 	text-decoration: none;
+	margin-left: 5px;
 }
 
 navigation.top li {

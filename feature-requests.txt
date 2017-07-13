@@ -1,0 +1,4 @@
+- Add status bar that shows messages. Examples: Task moved to new column, new task added, task deleted, more?
+- Make delete button available without clicking into task.
+- Hide other people's tasks rather than color in if a checkbox is ticked and others are unticked.
+- Integrate with Asana using code from our employee tracker application.

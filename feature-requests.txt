@@ -7,4 +7,6 @@
 	c) If strpos cannot find it, add it to backlog for that staff member
 	d) Add config file for Asana integration that allows you to enter your tokens, ID's, endpoints, and so on.
 	e) Add Asana class file for API connection.
-  
+- Update task entry screen with fields [project, title, desc, assigned to].
+	a) Update data.txt generator (Asana code and core.js/settings.js/(more?) to expect those and input tbd for any that don't show up.
+	

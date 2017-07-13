@@ -121,7 +121,7 @@ ul {
 
 navigation.top {
 	/*height: 30px;*/
-	padding: 5px;
+	padding: 10px;
 	display: block;
 	background: #666666; /* Old browsers */
 	background: -moz-linear-gradient(top,  #666666 0%, #474747 22%, #000000 100%, #131313 100%); /* FF3.6+ */

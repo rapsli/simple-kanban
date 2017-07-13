@@ -1,10 +1,10 @@
 var possibleStates = [
-	'P,Pipeline',
-	'R,Request Evaluation',
-	'Rm,Requirements',
-	'C,Concept',
-	'D,Development',
-	'Dy,Deployment',
+	'B,Backlog',
+	'P,Pending ',
+	'Cs,Current Sprint',
+	'D,Doing',
+	'Bl,Blocked',
+	'Q,QA',
 	'L,Live'
 ];
 

@@ -91,6 +91,7 @@
 }
 .modal-header .close {
   margin-top: 2px;
+  float:right;
 }
 .modal-header h3 {
   margin: 0;

@@ -1,0 +1,12 @@
+- Add status bar that shows messages. Examples: Task moved to new column, new task added, task deleted, more?
+- Make delete button available without clicking into task.
+- Hide other people's tasks rather than color in if a checkbox is ticked and others are unticked.
+- Integrate with Asana using code from our employee tracker application.
+	a) Pull all tasks and compare short desc to what is in data file.
+	b) If strpos finds the desc in the data file for that staff member, ignore the task.
+	c) If strpos cannot find it, add it to backlog for that staff member
+	d) Add config file for Asana integration that allows you to enter your tokens, ID's, endpoints, and so on.
+	e) Add Asana class file for API connection.
+- Update task entry screen with fields [project, title, desc, assigned to].
+	a) Update data.txt generator (Asana code and core.js/settings.js/(more?) to expect those and input tbd for any that don't show up.
+	

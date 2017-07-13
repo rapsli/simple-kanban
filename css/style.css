@@ -3,7 +3,7 @@ body {
 	height: 100%;
 }
 h4 {
-	margin:5px;
+	margin:15px 5px;
 	text-align: center;
 	height: 40px;
 }
@@ -11,40 +11,44 @@ h4 {
 #board {
 	float: left;
 	width: 100%;
-	display: table; 
+	display: table;
+	background:#f4ecd8;
 }
 #board .col {
 	display: table-cell;
+	padding-bottom:45px;
 }
 
 .state_box {
 	width:12.5%;
 	margin-right: 5px;
+	border-left:1px solid #676767;
+	border-right:1px solid #676767;
 }
 
 .col_0 {
-	background: #E6E6F5;
+	background: #f4ecd8;
 }
 .col_1 {
-	background: #CCCCEB;
+	background: #f4ecd8;
 }
 .col_2 {
-	background-color: #B2B2E0;
+	background-color: #f4ecd8;
 }
 .col_3 {
-	background-color: #9999D6;
+	background-color: #f4ecd8;
 }
 .col_4 {
-	background-color: #8080CC;
+	background-color: #f4ecd8;
 }
 .col_5 {
-	background-color: #6666C2;
+	background-color: #f4ecd8;
 }
 .col_6 {
-	background-color: #4D4DB8;
+	background-color: #f4ecd8;
 }
 .col_7 {
-	background-color: #3333AD;
+	background-color: #f4ecd8;
 }
 
 
@@ -169,5 +173,3 @@ navigation.top li {
 .modal li {
 	line-height: 1.8em;
 }
-
-.editable {padding:10px 0px 10px 5px;}

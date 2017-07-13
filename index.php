@@ -16,10 +16,10 @@
 <div id="helpModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-    <h3 id="myModalLabel">Help Project Dashboard</h3>
+    <h3 id="myModalLabel">HELP</h3>
   </div>
   <div class="modal-body">
-    <h4>Some tips on how to use the dashboard</h4>
+    <h4>Tips on how to use the dashboard</h4>
     <ul>
     	<li><strong>Create new project</strong>: Use "n" or click the icon in the top navigation</li>
     	<li><strong>Save a project</strong>: Press enter or click "save"</li>
